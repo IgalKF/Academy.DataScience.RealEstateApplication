@@ -11,10 +11,6 @@ services:
       - "1433:1433"
   rabbitmq:
     image: rabbitmq
-    environment:
-      ACCEPT_EULA: "Y"
-      SA_PASSWORD: "q1w2e3r4!"
-      MSSQL_PID: "Express"
     ports:
       - "15672:15672"
   academy.datascience.houselaunchergateway:
@@ -27,3 +23,10 @@ services:
     ports:
       - "8080:80"
       - "4040:5000"
+  academy.datascience.houselauncherwebapp:
+    image: ${DOCKER_REGISTRY-}academydatasciencehouselauncherwebapp
+    build:
+      context: ../house-launcher-webapp
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
