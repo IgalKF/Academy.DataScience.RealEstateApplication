@@ -12,15 +12,16 @@ import pandas as pd
 # Global variables
 autoScroll = 0  # Flag for autoscroll in NadlanGov.
 waitTime = 10  # Waiting time for loading the search value transactions.
+slow_wait_time = 5
 scrollWaitingTime = 10
 topHeight = 55*100000 # Maximum value for loading 50K values in a table of NadlanGov 55 inches per line.
 city = "ראשון לציון"
 en_city = "Rishon_le-zion"
-pool_size = 1
-scroll_down_limit = 300
+pool_size = 3
+scroll_down_limit = 1
 directory_name = os.path.dirname(__file__)
 
-
+# For multithreading CSV files
 file_list = [
                f'../Data/{en_city}/filter_by_1.csv',
                f'../Data/{en_city}/filter_by_2.csv',
@@ -37,6 +38,9 @@ def get_topics(web_driver: webdriver, headers: dict):
     for header in header_elements.find_elements(by=By.TAG_NAME, value='button'):
         if header != '':
             headers[header.get_attribute('aria-label')] = []
+    # Addition 2 topics lists
+    headers["תאריכי עבר"] = []
+    headers["מחירי עבר"] = []
 
 
 # Scrolling down the table
@@ -61,9 +65,13 @@ def scroll_down_table(web_driver: webdriver,auto: int):
 
 # Getting the data from table
 def get_data_from_table(web_driver: webdriver, headers: dict):
+    # Lists of values
+    prices_of_history_dates = []
+    dates_of_history = []
     my_table = web_driver.find_element(By.XPATH, "//*[contains(@class, 'tableBody')]")
     # rows data, each value of data by topic will be insert for the belong list in the dictionary.
     for row in my_table.find_elements(by=By.CLASS_NAME, value='rbutton'):
+        time.sleep(5)
         for i, field in enumerate(row.find_elements(by=By.CLASS_NAME, value='tableCol')):
             elements = field.find_elements(by=By.TAG_NAME, value='div')
             if field.tag_name == 'div' and len(elements) > 0:
@@ -75,18 +83,53 @@ def get_data_from_table(web_driver: webdriver, headers: dict):
                 headers[list(headers.keys())[i]].append(value)
             else:
                 headers[list(headers.keys())[i]].append('NaN')
+        # Getting the Addition Data of history
+        # Clicking the line
+        row.click()
+        time.sleep(slow_wait_time)
+        # Getting the Elements
+        try:
+            # Getting Data from inside button of history dates and prices
+            history_data = my_table.find_element(by=By.CLASS_NAME, value="resultOptions")
+            history_price = history_data.find_elements(by=By.CLASS_NAME, value="historyPrice")
+            history_date = history_data.find_elements(by=By.CLASS_NAME, value="historyDate")
+            # Adding Values into lists
+            for field_of_dates in history_date:
+                    dates_of_history.append(field_of_dates.text)
+            for field_of_price in history_price:
+                    prices_of_history_dates.append(field_of_price.text)
+            if dates_of_history:
+                headers["תאריכי עבר"].append(dates_of_history[:])
+            else:
+                # If null
+                headers["תאריכי עבר"].append("NaN")
+            if prices_of_history_dates:
+                headers["מחירי עבר"].append(prices_of_history_dates[:])
+            else:
+                # if null
+                headers["מחירי עבר"].append("NaN")
+        except:
+            headers["תאריכי עבר"].append("NaN")
+            headers["מחירי עבר"].append("NaN")
+
+        # clearing list for next time
+        dates_of_history.clear()
+        prices_of_history_dates.clear()
+
+        # time pause
+        time.sleep(waitTime)
+
+        # click button again
+        row.click()
 
 
-
-
-bedroom_filtering_range = range(1, pool_size + 1)
+bedroom_filtering_range = range(3, pool_size + 1)
 for bedroom_filter in bedroom_filtering_range:
     # Open webdriver for multi threading
     # Web crawling start.
     # declaring of chromedriver l
     # ocation
-    ser = Service(os.path.realpath(f"..\\webdriver\\chromedriver{bedroom_filter}.exe"))
-
+    ser = Service(os.path.realpath(f"../webdriver/chromedriver{bedroom_filter}.exe"))
     driver = webdriver.Chrome(service=ser)
 
     # Open Page by URL
@@ -106,7 +149,8 @@ for bedroom_filter in bedroom_filtering_range:
 
     # Dictionary { Key: topic, Value: List }
     topics = {}
-
+    # Get new search link
+    time.sleep(waitTime)
     # Getting keys for dic : topics
     get_topics(driver, topics)
 
@@ -124,21 +168,18 @@ for bedroom_filter in bedroom_filtering_range:
     # scrolling down the table
     scroll_down_table(driver, autoScroll)
     # table data into the Dic
+
+    # Time sleep
+    time.sleep(waitTime)
+    # Getting data from table
     get_data_from_table(driver, topics)
-    topics.popitem()
+    # remove empty topic
+    del topics['']
+
+    # create data frame
     df = pd.DataFrame(data=topics)
-    os.mkdir(os.path.realpath(f'../Data/{en_city}'))
-    print(os.path.realpath(f"../Data/{en_city}/filter_by_{bedroom_filter}.csv", encoding='utf-8-sig'))
-    df.to_csv(os.path.realpath(f"../Data/{en_city}/filter_by_{bedroom_filter}.csv", encoding='utf-8-sig'))
+    # create CSV File
+    df.to_csv("fornow2.csv", encoding='utf-8-sig')
+    df.to_csv(os.path.realpath(f"../CSV files/{en_city}/filter_by_{bedroom_filter}.csv"),encoding='utf-8-sig')
 
-# Pop last item Empty div
 
-new_data_frame = pd.concat(map(pd.read_csv, file_list), ignore_index=True)
-
-new_data_frame = pd.read_csv('allData.csv')
-new_data_frame['מגמת שינוי'].fillna("ב 0 שנים 0%", inplace=True)
-new_data_frame.drop_duplicates() # remove duplicates
-new_data_frame.to_csv('end.csv', encoding='utf-8-sig')
-new_data_frame.dropna(inplace=True)
-
-new_data_frame.to_csv('allData.csv', encoding='utf-8-sig', index=0)
