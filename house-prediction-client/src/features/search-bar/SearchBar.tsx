@@ -60,13 +60,13 @@ const SearchBar = () => {
 
             <ReactDatePicker onChange={e => dispatch(setSearchInput({...filterInput.item, day: e?.getDay() ?? -1, month: e?.getMonth() ?? -1, year: e?.getFullYear() ?? -1, }))} className="bg-gray-800 text-gray-50 border rounded-lg" selected={new Date(filterInput.item.year,filterInput.item.month,filterInput.item.day,)} />
         
-            <div className="flex items-center mb-4">
+            <div className="flex items-center">
                 <input checked={checked} onClick={e =>{setChecked(!checked); dispatch(setSearchInput({...filterInput.item, model: 1}))}} id="default-radio-1" type="radio" value={1} name="default-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-transparent dark:focus:ring-transparent dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                <label htmlFor="default-radio-1" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">רגרסיה ליניארית</label>
+                <label htmlFor="default-radio-1" className="mr-2 ml-2 text-sm font-medium text-gray-300 dark:text-gray-300">רגרסיה ליניארית</label>
             </div>
             <div className="flex items-center">
                 <input checked={!checked} onClick={e => {setChecked(!checked); dispatch(setSearchInput({...filterInput.item, model: 2}))}} id="default-radio-2" type="radio" value={2} name="default-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-transparent dark:focus:ring-transparent dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                <label htmlFor="default-radio-2" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">רגרסיה פולינומיאלית</label>
+                <label htmlFor="default-radio-2" className="mr-2 ml-2 text-sm font-medium text-gray-300 dark:text-gray-300">רגרסיה פולינומיאלית</label>
             </div>
         </div>
     );
