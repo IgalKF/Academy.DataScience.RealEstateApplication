@@ -18,7 +18,8 @@ const initialState: ItemState = {
     month: 5,
     year: 2022,
     lat: -1,
-    lng: -1
+    lng: -1,
+    model: 1,
   }
 }
 

@@ -4,7 +4,6 @@ import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import {
     setPosition as setPrice,
 } from './mapSlice'
-import { setPriority } from "os";
 import { selectSearchInput, setSearchInput } from "../search-bar/searchBarSlice";
 import { predictPrice } from "../../services/predictionService";
 

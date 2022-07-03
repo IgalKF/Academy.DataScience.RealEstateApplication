@@ -7,5 +7,6 @@ export interface Item {
     month: number,
     year: number,
     lat: number,
-    lng: number
+    lng: number,
+    model: number
 }
