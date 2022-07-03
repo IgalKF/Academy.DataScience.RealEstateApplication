@@ -9,9 +9,11 @@ function App() {
   return (
     <div className="App bg-slate-900">
       <header className="App-header">
+        <h1 className='text-gray-50 mb-10 text-right'>המגישים: יגאל חלפין ואדיר ניסים</h1>
+        <h1 className='text-gray-50 mb-10'>כמה עולה הנכס?</h1>
         <SearchBar />
         <Map/>
-        <h1 className='text-white mt-5'>כמה עולה לי?</h1>
+        <h1 className='text-white mt-5'>עולה לי</h1>
         <Counter/>
       </header>
     </div>

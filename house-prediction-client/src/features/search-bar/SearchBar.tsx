@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import {
     selectSearchInput,
@@ -15,23 +15,29 @@ const SearchBar = () => {
     floors.splice(0,1);
     rooms.splice(0,1);
     const [startDate, setStartDate] = useState(new Date());
+    const [num, setNum] = useState(0);
+
+    useEffect(()=>{
+        console.log(positionInput);
+        
+    }, [num])
     
     return (
         <div className="flex justify-center items-center w-full gap-10">
-            <label htmlFor="rooms" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">מספר חדרים</label>
-            <select defaultValue={-1} onChange={e => dispatch(setSearchInput({...positionInput, rooms: parseInt(e.target.value)}))}  id="rooms" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <label htmlFor="rooms" className="block mb-2 text-sm font-medium text-gray-50 dark:text-gray-400">מספר חדרים</label>
+            <select defaultValue={-1} onChange={e => {dispatch(setSearchInput({...positionInput.item, rooms: parseInt(e.target.value)})); setNum(3)}}  id="rooms" className="bg-gray-800 border border-gray-300 text-gray-50 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <option value={-1}></option>
                 {rooms.map(room => <option key={room} value={room}>{room}</option>)}
             </select>
 
-            <label htmlFor="floor" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">קומה</label>
-            <select id="floor" defaultValue={-1} onChange={e => dispatch(setSearchInput({...positionInput, floor: parseInt(e.target.value)}))} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <label htmlFor="floor" className="block mb-2 text-sm font-medium text-gray-50 dark:text-gray-400">קומה</label>
+            <select id="floor" defaultValue={-1} onChange={e => dispatch(setSearchInput({...positionInput.item, floor: parseInt(e.target.value)}))} className="bg-gray-800 border border-gray-300 text-gray-50 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <option value={-1}></option>
                 {floors.map(floor => <option key={floor} value={floor}>{floor}</option>)}
             </select>
 
-            <label htmlFor="property_type" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">סוג הנכס</label>
-            <select defaultValue={-1} onChange={e => dispatch(setSearchInput({...positionInput, propety_type: parseInt(e.target.value)}))} id="property_type" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <label htmlFor="property_type" className="block mb-2 text-sm font-medium text-gray-50 dark:text-gray-400">סוג הנכס</label>
+            <select defaultValue={-1} onChange={e => dispatch(setSearchInput({...positionInput.item, property_type: parseInt(e.target.value)}))} id="property_type" className="bg-gray-800 border border-gray-300 text-gray-50 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <option value={-1}></option>
                 <option value={1}>דירה</option>
                 <option value={2}>קוטג' דו-משפחתי</option>
@@ -42,10 +48,10 @@ const SearchBar = () => {
                 <option value={7}>קוטג' טורי</option>
             </select>
 
-            <label htmlFor="square_foot" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">מ"ר</label>
-            <input type='number' onChange={e => dispatch(setSearchInput({...positionInput, square_foot: parseInt(e.target.value)}))} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+            <label htmlFor="square_foot" className="block mb-2 text-sm font-medium text-gray-50 dark:text-gray-400">מ"ר</label>
+            <input type='number' onChange={e => dispatch(setSearchInput({...positionInput.item, square_foot: parseInt(e.target.value)}))} className="bg-gray-800 border border-gray-300 text-gray-50 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
 
-            <ReactDatePicker onChange={e => dispatch(setSearchInput({...positionInput, day: e?.getDay() ?? -1, month: e?.getMonth() ?? -1, year: e?.getFullYear() ?? -1, }))} className="bg-gray-700 dark:text-gray-400 border rounded-lg" selected={startDate} />
+            <ReactDatePicker onChange={e => dispatch(setSearchInput({...positionInput.item, day: e?.getDay() ?? -1, month: e?.getMonth() ?? -1, year: e?.getFullYear() ?? -1, }))} className="bg-gray-800 text-gray-50 border rounded-lg" selected={new Date(positionInput.item.year,positionInput.item.month,positionInput.item.day,)} />
         </div>
     );
 

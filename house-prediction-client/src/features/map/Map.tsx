@@ -19,10 +19,12 @@ const Map = () => {
     const [ isMapLoaded, setIsMapLoaded ] = useState<google.maps.Map | boolean>(false)
 
     useEffect(() => {
-        const item = {...positionInput, lat: marker.lat, lng: marker.lng};
-        const price = predictPrice(item);
-        price.then(data => {
-            dispatch(setPrice(`${price}`))
+        const item = {...positionInput.item, lat: marker.lat, lng: marker.lng};
+        console.log(item);
+        predictPrice(item).then((payload: any) => {
+                console.log(payload.data);
+                
+            dispatch(setPrice(payload.data))
         })
     }, [marker])
     

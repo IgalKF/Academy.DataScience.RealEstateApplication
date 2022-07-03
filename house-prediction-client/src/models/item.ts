@@ -1,5 +1,5 @@
 export interface Item {
-    propety_type: number,
+    property_type: number,
     rooms: number,
     floor: number,
     square_foot: number,

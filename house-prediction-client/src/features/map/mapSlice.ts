@@ -2,18 +2,18 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from '../../app/store';
 
 export interface MapState {
-  value: string;
+  value: number;
 }
 
 const initialState: MapState = {
-  value: '',
+  value: 0,
 };
 
 export const mapSlice = createSlice({
   name: 'map',
   initialState,
   reducers: {
-    setPosition: (state: MapState, action: PayloadAction<string>) => {
+    setPosition: (state: MapState, action: PayloadAction<number>) => {
       state.value = action.payload;
     },
   },
