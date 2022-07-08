@@ -9,7 +9,7 @@ export function Counter() {
 
   return (
     <div>
-        <h1 className='text-white'>{Math.floor(positionInput == 550180.0020261407 ? 0 : positionInput).toString().replace(/\B(?=(\d{3})+(?!\d))/g,',')} ₪</h1>
+        <h1 className='text-white'>{Math.floor(positionInput == 550180.0020261556 ? 0 : positionInput).toString().replace(/\B(?=(\d{3})+(?!\d))/g,',')} ₪</h1>
     </div>
   );
 }
